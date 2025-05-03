@@ -11,6 +11,7 @@ using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Text.Json;
+using System.Drawing;
 
 namespace CopyEverythingOcr.Wpf;
 
@@ -21,6 +22,8 @@ public partial class App : System.Windows.Application
 {
     private HotkeyManager? _hotkeyManager;
     private MainWindow? _mainWindow;
+    private NotifyIcon? _notifyIcon;
+    private SettingsWindow? _settingsWindow;
 
     private bool _isCapturing = false;
 
@@ -36,13 +39,7 @@ public partial class App : System.Windows.Application
 
         _mainWindow = new MainWindow();
 
-        // Subscribe to the Loaded event to initialize hotkeys after window is ready
-        _mainWindow.Loaded += MainWindow_Loaded;
-
-        // Show the main window
-        _mainWindow.Show();
-
-        // Hotkey initialization moved to MainWindow_Loaded
+        _mainWindow.Loaded += HelperWindow_Loaded;
     }
 
     private void LoadConfiguration()
@@ -87,53 +84,166 @@ public partial class App : System.Windows.Application
         }
     }
 
-    private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+    private void HelperWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        if (_mainWindow == null || _appSettings == null || _appSettings.Hotkey == null) return;
-        _mainWindow.Loaded -= MainWindow_Loaded;
+        if (sender is Window window) {
+            window.Loaded -= HelperWindow_Loaded;
+        } else {
+            Debug.WriteLine("Warning: Loaded event sender is not a Window.");
+        }
 
+        if (_appSettings == null || _appSettings.Hotkey == null)
+        {
+            Debug.WriteLineError("Settings or Hotkey configuration is missing. Cannot initialize.");
+            return;
+        }
+
+        InitializeNotifyIcon();
+
+        if (_mainWindow != null)
+        {
+            try
+            {
+                Keys key = Keys.F1;
+                ModifierKeys modifiers = ModifierKeys.Control | ModifierKeys.Alt;
+
+                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Key) &&
+                    Enum.TryParse<Keys>(_appSettings.Hotkey.Key, true, out var parsedKey))
+                {
+                    key = parsedKey;
+                }
+                else
+                {
+                    Debug.WriteLine($"Warning: Could not parse Hotkey Key '{_appSettings.Hotkey.Key}'. Using default F1.");
+                    key = Keys.F1;
+                }
+
+                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
+                {
+                    modifiers = ParseModifierKeys(_appSettings.Hotkey.Modifiers);
+                    if(modifiers == ModifierKeys.None && !string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
+                    {
+                         Debug.WriteLine($"Warning: Could not parse Hotkey Modifiers '{_appSettings.Hotkey.Modifiers}'. Using default Control+Alt.");
+                         modifiers = ModifierKeys.Control | ModifierKeys.Alt;
+                    }
+                }
+                 else
+                 {
+                     Debug.WriteLine("Warning: Hotkey Modifiers not specified. Using default Control+Alt.");
+                     modifiers = ModifierKeys.Control | ModifierKeys.Alt;
+                 }
+
+                _hotkeyManager = new HotkeyManager(_mainWindow);
+                _hotkeyManager.HotkeyPressed += HotkeyManager_HotkeyPressed;
+                if (modifiers != ModifierKeys.None)
+                {
+                    _hotkeyManager.Register(key, modifiers);
+                    Debug.WriteLine($"Hotkey registered: {modifiers} + {key}");
+                }
+                else
+                {
+                     Debug.WriteLineError("Cannot register hotkey with ModifierKeys.None.");
+                     System.Windows.MessageBox.Show("Invalid hotkey configuration (Modifiers cannot be None). Please check settings.",
+                                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+
+            }
+            catch (Win32Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}
+" +
+                                "Please check if another application is using the same hotkey or change it in settings.",
+                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to initialize hotkey manager: {ex.Message}", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"An unexpected error occurred during hotkey setup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine($"Hotkey Setup Exception: {ex}");
+            }
+        }
+        else
+        {
+             Debug.WriteLineError("Cannot register hotkey because the required window instance is null.");
+             System.Windows.MessageBox.Show("Failed to initialize hotkey manager: Required window component is missing.", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        Debug.WriteLine("Application started, running in system tray.");
+    }
+
+    private void InitializeNotifyIcon()
+    {
+        _notifyIcon = new NotifyIcon();
+        _notifyIcon.Icon = GetAppIcon();
+        _notifyIcon.Text = "CopyEverything OCR";
+        _notifyIcon.Visible = true;
+
+        var contextMenu = new ContextMenuStrip();
+        var settingsMenuItem = new ToolStripMenuItem("Settings");
+        settingsMenuItem.Click += SettingsMenuItem_Click;
+        var exitMenuItem = new ToolStripMenuItem("Exit");
+        exitMenuItem.Click += ExitMenuItem_Click;
+
+        contextMenu.Items.Add(settingsMenuItem);
+        contextMenu.Items.Add(new ToolStripSeparator());
+        contextMenu.Items.Add(exitMenuItem);
+
+        _notifyIcon.ContextMenuStrip = contextMenu;
+
+         _notifyIcon.DoubleClick += SettingsMenuItem_Click;
+
+        Debug.WriteLine("NotifyIcon initialized.");
+    }
+
+    private Icon GetAppIcon()
+    {
         try
         {
-            Keys key = Keys.F1;
-            ModifierKeys modifiers = ModifierKeys.Control | ModifierKeys.Alt;
-
-            if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Key) &&
-                Enum.TryParse<Keys>(_appSettings.Hotkey.Key, true, out var parsedKey))
-            {
-                key = parsedKey;
-            }
-            else
-            {
-                Debug.WriteLine($"Warning: Could not parse Hotkey Key '{_appSettings.Hotkey.Key}'. Using default.");
-            }
-
-            if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
-            {
-                modifiers = ParseModifierKeys(_appSettings.Hotkey.Modifiers);
-            }
-
-            _hotkeyManager = new HotkeyManager(_mainWindow);
-            _hotkeyManager.HotkeyPressed += HotkeyManager_HotkeyPressed;
-            _hotkeyManager.Register(key, modifiers);
-
-            Debug.WriteLine($"Hotkey registered after MainWindow loaded: {modifiers} + {key}");
-        }
-        catch (Win32Exception ex)
-        {
-            System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}\n" +
-                            "Please check if another application is using the same hotkey or change it in settings.",
-                            "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-        catch (InvalidOperationException ex)
-        {
-            System.Windows.MessageBox.Show($"Failed to initialize hotkey manager: {ex.Message}", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+             string iconPath = Path.Combine(AppContext.BaseDirectory, "Assets", "icon.ico");
+             if (File.Exists(iconPath))
+             {
+                 return new Icon(iconPath);
+             }
+            Debug.WriteLineWarning($"Application icon not found at '{iconPath}'. Using default system icon.");
+            return SystemIcons.Application;
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show($"An unexpected error occurred during hotkey setup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Debug.WriteLine($"Error loading icon: {ex.Message}");
+            return SystemIcons.Application;
         }
+    }
 
-        // TODO: Implement System Tray Icon logic here (might also need window handle)
+    private void SettingsMenuItem_Click(object? sender, EventArgs e)
+    {
+        ShowSettingsWindow();
+    }
+
+    private void ExitMenuItem_Click(object? sender, EventArgs e)
+    {
+        Shutdown();
+    }
+
+    private void ShowSettingsWindow()
+    {
+        if (_settingsWindow == null || !_settingsWindow.IsLoaded)
+        {
+            _settingsWindow = new SettingsWindow();
+            _settingsWindow.Closed += (s, args) => _settingsWindow = null;
+            _settingsWindow.Show();
+            _settingsWindow.Activate();
+        }
+        else
+        {
+            if (_settingsWindow.WindowState == WindowState.Minimized)
+            {
+                _settingsWindow.WindowState = WindowState.Normal;
+            }
+            _settingsWindow.Activate();
+        }
     }
 
     private ModifierKeys ParseModifierKeys(string modifiersString)
@@ -255,8 +365,9 @@ public partial class App : System.Windows.Application
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _notifyIcon?.Dispose();
         _hotkeyManager?.Dispose();
-        Debug.WriteLine("Hotkey unregistered on exit.");
+        Debug.WriteLine("Hotkey unregistered and NotifyIcon disposed on exit.");
 
         base.OnExit(e);
     }

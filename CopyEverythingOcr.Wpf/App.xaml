@@ -1,7 +1,8 @@
 ﻿<Application x:Class="CopyEverythingOcr.Wpf.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CopyEverythingOcr.Wpf">
+             xmlns:local="clr-namespace:CopyEverythingOcr.Wpf"
+             ShutdownMode="OnExplicitShutdown">
     <Application.Resources>
          
     </Application.Resources>
