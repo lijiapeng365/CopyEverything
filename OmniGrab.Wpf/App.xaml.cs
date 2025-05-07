@@ -38,8 +38,87 @@ public partial class App : System.Windows.Application
         LoadConfiguration();
 
         _mainWindow = new MainWindow();
+        _mainWindow.ShowInTaskbar = false;
+        _mainWindow.Visibility = Visibility.Collapsed;
 
-        _mainWindow.Loaded += HelperWindow_Loaded;
+        if (_appSettings == null || _appSettings.Hotkey == null)
+        {
+            Debug.WriteLine("ERROR: Settings or Hotkey configuration is missing. Cannot initialize.");
+            Shutdown(-1);
+            return;
+        }
+
+        InitializeNotifyIcon();
+
+        if (_mainWindow != null)
+        {
+            try
+            {
+                Keys key = Keys.F1;
+                ModifierKeys modifiers = ModifierKeys.Control | ModifierKeys.Alt;
+
+                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Key) &&
+                    Enum.TryParse<Keys>(_appSettings.Hotkey.Key, true, out var parsedKey))
+                {
+                    key = parsedKey;
+                }
+                else
+                {
+                    Debug.WriteLine($"Warning: Could not parse Hotkey Key '{_appSettings.Hotkey.Key}'. Using default F1.");
+                }
+
+                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
+                {
+                    modifiers = ParseModifierKeys(_appSettings.Hotkey.Modifiers);
+                    if (modifiers == ModifierKeys.None && !string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
+                    {
+                        Debug.WriteLine($"Warning: Could not parse Hotkey Modifiers '{_appSettings.Hotkey.Modifiers}'. Using default Control+Alt.");
+                        modifiers = ModifierKeys.Control | ModifierKeys.Alt;
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("Warning: Hotkey Modifiers not specified. Using default Control+Alt.");
+                }
+
+                _hotkeyManager = new HotkeyManager(_mainWindow);
+                _hotkeyManager.HotkeyPressed += HotkeyManager_HotkeyPressed;
+                
+                if (modifiers != ModifierKeys.None || key != Keys.None)
+                {
+                    _hotkeyManager.Register(key, modifiers);
+                    Debug.WriteLine($"Hotkey registered: {modifiers} + {key}");
+                }
+                else
+                {
+                    Debug.WriteLine("Warning: Both Hotkey Key and Modifiers are effectively None. Hotkey not registered.");
+                }
+            }
+            catch (Win32Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}\n" +
+                                "Please check if another application is using the same hotkey or change it in settings.",
+                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (InvalidOperationException ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to initialize hotkey manager: {ex.Message}", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"An unexpected error occurred during hotkey setup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Debug.WriteLine($"Hotkey Setup Exception: {ex}");
+            }
+        }
+        else
+        {
+            Debug.WriteLine("ERROR: MainWindow instance is null during hotkey setup. This should not happen.");
+            System.Windows.MessageBox.Show("Failed to initialize hotkey manager: Required window component is missing.", "Critical Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Shutdown(-1);
+            return;
+        }
+
+        Debug.WriteLine("Application started, running in system tray.");
     }
 
     private void LoadConfiguration()
@@ -82,95 +161,6 @@ public partial class App : System.Windows.Application
                                        "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
             _appSettings = new AppSettings { Ocr = new OcrSettings(), Hotkey = new HotkeySettings { Key = "F1", Modifiers = "Control, Alt" }, ResultWindow = new ResultWindowSettings() };
         }
-    }
-
-    private void HelperWindow_Loaded(object sender, RoutedEventArgs e)
-    {
-        if (sender is Window window) {
-            window.Loaded -= HelperWindow_Loaded;
-        } else {
-            Debug.WriteLine("Warning: Loaded event sender is not a Window.");
-        }
-
-        if (_appSettings == null || _appSettings.Hotkey == null)
-        {
-            Debug.WriteLine("ERROR: Settings or Hotkey configuration is missing. Cannot initialize.");
-            return;
-        }
-
-        InitializeNotifyIcon();
-
-        if (_mainWindow != null)
-        {
-            try
-            {
-                Keys key = Keys.F1;
-                ModifierKeys modifiers = ModifierKeys.Control | ModifierKeys.Alt;
-
-                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Key) &&
-                    Enum.TryParse<Keys>(_appSettings.Hotkey.Key, true, out var parsedKey))
-                {
-                    key = parsedKey;
-                }
-                else
-                {
-                    Debug.WriteLine($"Warning: Could not parse Hotkey Key '{_appSettings.Hotkey.Key}'. Using default F1.");
-                    key = Keys.F1;
-                }
-
-                if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
-                {
-                    modifiers = ParseModifierKeys(_appSettings.Hotkey.Modifiers);
-                    if(modifiers == ModifierKeys.None && !string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
-                    {
-                         Debug.WriteLine($"Warning: Could not parse Hotkey Modifiers '{_appSettings.Hotkey.Modifiers}'. Using default Control+Alt.");
-                         modifiers = ModifierKeys.Control | ModifierKeys.Alt;
-                    }
-                }
-                 else
-                 {
-                     Debug.WriteLine("Warning: Hotkey Modifiers not specified. Using default Control+Alt.");
-                     modifiers = ModifierKeys.Control | ModifierKeys.Alt;
-                 }
-
-                _hotkeyManager = new HotkeyManager(_mainWindow);
-                _hotkeyManager.HotkeyPressed += HotkeyManager_HotkeyPressed;
-                if (modifiers != ModifierKeys.None)
-                {
-                    _hotkeyManager.Register(key, modifiers);
-                    Debug.WriteLine($"Hotkey registered: {modifiers} + {key}");
-                }
-                else
-                {
-                     Debug.WriteLine("ERROR: Cannot register hotkey with ModifierKeys.None.");
-                     System.Windows.MessageBox.Show("Invalid hotkey configuration (Modifiers cannot be None). Please check settings.",
-                                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-
-            }
-            catch (Win32Exception ex)
-            {
-                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}\n" +
-                                "Please check if another application is using the same hotkey or change it in settings.",
-                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (InvalidOperationException ex)
-            {
-                System.Windows.MessageBox.Show($"Failed to initialize hotkey manager: {ex.Message}", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show($"An unexpected error occurred during hotkey setup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                Debug.WriteLine($"Hotkey Setup Exception: {ex}");
-            }
-        }
-        else
-        {
-             Debug.WriteLine("ERROR: Cannot register hotkey because the required window instance is null.");
-             System.Windows.MessageBox.Show("Failed to initialize hotkey manager: Required window component is missing.", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-
-        Debug.WriteLine("Application started, running in system tray.");
     }
 
     private void InitializeNotifyIcon()
