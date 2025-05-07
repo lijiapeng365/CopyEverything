@@ -1,6 +1,30 @@
-# 忽略编译输出目录
-CopyEverythingOcr.Wpf/bin/
-CopyEverythingOcr.Wpf/obj/
+# 忽略 Visual Studio 和 Rider 的特定文件
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# 忽略发布目录
+# 忽略编译输出目录
+OmniGrab.Wpf/bin/
+OmniGrab.Wpf/obj/
+
+# 忽略 Rider 目录
+.idea/
+
+# 忽略打包和发布文件
+*.nupkg
+*.snupkg
+
+# 忽略测试结果
+TestResults/
+*.trx
+
+# 忽略本地配置文件 (如果适用)
+appsettings.Development.json
+secrets.json
+
+# 忽略操作系统生成的文件
+Thumbs.db
+.DS_Store
 publish/

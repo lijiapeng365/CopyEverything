@@ -1,4 +1,4 @@
-# CopyEverythingOcr - Windows 屏幕 OCR 小工具
+# OmniGrab - Windows 屏幕 OCR 小工具
 
 **一个简单的 Windows 应用程序，可以通过快捷键截取屏幕选定区域，调用 OCR API (兼容 OpenAI Vision API 格式) 识别其中的文本，并将结果显示在一个可拖动的小窗口中以便复制。**
 
@@ -9,7 +9,7 @@
 *   **OCR 识别:** 将截取的图像发送给配置的 OCR API 服务 (需兼容 OpenAI Vision API 格式) 进行文本识别。
 *   **自定义 API 端点:** 用户可以在配置文件中指定使用的 OCR API URL 和模型名称，方便使用 OpenAI 或其他兼容服务。
 *   **结果展示窗口:** 在截图区域附近弹出一个置顶、无边框的小窗口，显示识别结果。
-*   **一键复制:** 结果窗口提供“复制”按钮，方便将识别文本复制到剪贴板。
+*   **一键复制:** 结果窗口提供"复制"按钮，方便将识别文本复制到剪贴板。
 *   **窗口拖动:** 结果窗口可以随意拖动。
 
 ## 技术栈
@@ -54,15 +54,15 @@
 **重要:**
 
 1.  **替换占位符:** 务必将 `"YOUR_API_KEY_HERE"` 和 `"YOUR_OPENAI_COMPATIBLE_ENDPOINT_URL_HERE"` 替换为您实际使用的值。
-2.  **复制到输出目录:** 确保 `appsettings.json` 文件在项目中的属性设置为“复制到输出目录: 如果较新则复制”或“始终复制”，这样程序运行时才能找到它。
+2.  **复制到输出目录:** 确保 `appsettings.json` 文件在项目中的属性设置为"复制到输出目录: 如果较新则复制"或"始终复制"，这样程序运行时才能找到它。
 
 ## 构建与运行
 
 1.  **克隆仓库 (如果适用):** `git clone <repository-url>`
-2.  **进入项目目录:** `cd CopyEverythingOcr.Wpf` (或项目根目录)
+2.  **进入项目目录:** `cd OmniGrab.Wpf` (或项目根目录)
 3.  **还原依赖:** `dotnet restore`
 4.  **构建:** `dotnet build`
-5.  **运行:** `dotnet run --project CopyEverythingOcr.Wpf/CopyEverythingOcr.Wpf.csproj`
+5.  **运行:** `dotnet run --project OmniGrab.Wpf/OmniGrab.Wpf.csproj`
     *   或者直接在 Visual Studio 中按 F5 运行。
 
 ## 如何使用
