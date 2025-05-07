@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Text.Json;
 using System.Drawing;
+using System.Globalization;
 
 namespace OmniGrab.Wpf;
 
@@ -43,7 +44,7 @@ public partial class App : System.Windows.Application
 
         if (_appSettings == null || _appSettings.Hotkey == null)
         {
-            Debug.WriteLine("ERROR: Settings or Hotkey configuration is missing. Cannot initialize.");
+            Debug.WriteLine(StringResources.ErrorCriticalInitGeneric);
             Shutdown(-1);
             return;
         }
@@ -64,7 +65,7 @@ public partial class App : System.Windows.Application
                 }
                 else
                 {
-                    Debug.WriteLine($"Warning: Could not parse Hotkey Key '{_appSettings.Hotkey.Key}'. Using default F1.");
+                    Debug.WriteLine(string.Format(StringResources.WarningParseKeyFailed, _appSettings.Hotkey.Key, "F1"));
                 }
 
                 if (!string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
@@ -72,13 +73,13 @@ public partial class App : System.Windows.Application
                     modifiers = ParseModifierKeys(_appSettings.Hotkey.Modifiers);
                     if (modifiers == ModifierKeys.None && !string.IsNullOrWhiteSpace(_appSettings.Hotkey.Modifiers))
                     {
-                        Debug.WriteLine($"Warning: Could not parse Hotkey Modifiers '{_appSettings.Hotkey.Modifiers}'. Using default Control+Alt.");
+                        Debug.WriteLine(string.Format(StringResources.WarningParseModifiersFailed, _appSettings.Hotkey.Modifiers, "Control+Alt"));
                         modifiers = ModifierKeys.Control | ModifierKeys.Alt;
                     }
                 }
                 else
                 {
-                    Debug.WriteLine("Warning: Hotkey Modifiers not specified. Using default Control+Alt.");
+                    Debug.WriteLine(string.Format(StringResources.WarningModifiersNotSpecified, "Control+Alt"));
                 }
 
                 _hotkeyManager = new HotkeyManager(_mainWindow);
@@ -87,38 +88,40 @@ public partial class App : System.Windows.Application
                 if (modifiers != ModifierKeys.None || key != Keys.None)
                 {
                     _hotkeyManager.Register(key, modifiers);
-                    Debug.WriteLine($"Hotkey registered: {modifiers} + {key}");
+                    Debug.WriteLine(string.Format(StringResources.InfoHotKeyRegistered, modifiers, key));
                 }
                 else
                 {
-                    Debug.WriteLine("Warning: Both Hotkey Key and Modifiers are effectively None. Hotkey not registered.");
+                    Debug.WriteLine(StringResources.WarningHotkeyNotRegistered);
                 }
             }
             catch (Win32Exception ex)
             {
-                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}\n" +
-                                "Please check if another application is using the same hotkey or change it in settings.",
-                                "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(StringResources.ErrorHotkeyRegisterFailed, ex.Message),
+                                StringResources.ErrorHotkeyTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (InvalidOperationException ex)
             {
-                System.Windows.MessageBox.Show($"Failed to initialize hotkey manager: {ex.Message}", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(StringResources.ErrorInitHotkeyManagerFailed, ex.Message), 
+                                StringResources.ErrorInitTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"An unexpected error occurred during hotkey setup: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(StringResources.ErrorUnexpectedHotkeySetup, ex.Message), 
+                                StringResources.ErrorTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 Debug.WriteLine($"Hotkey Setup Exception: {ex}");
             }
         }
         else
         {
-            Debug.WriteLine("ERROR: MainWindow instance is null during hotkey setup. This should not happen.");
-            System.Windows.MessageBox.Show("Failed to initialize hotkey manager: Required window component is missing.", "Critical Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            Debug.WriteLine(StringResources.ErrorCriticalInitGeneric);
+            System.Windows.MessageBox.Show(StringResources.ErrorCriticalInitGeneric, 
+                            StringResources.ErrorCriticalInitGeneric, MessageBoxButton.OK, MessageBoxImage.Error);
             Shutdown(-1);
             return;
         }
 
-        Debug.WriteLine("Application started, running in system tray.");
+        Debug.WriteLine(StringResources.AppTitle + " started, running in system tray.");
     }
 
     private void LoadConfiguration()
@@ -135,8 +138,8 @@ public partial class App : System.Windows.Application
 
             if (_appSettings == null)
             {
-                System.Windows.MessageBox.Show("Failed to load settings from appsettings.json. Please ensure the file exists and is correctly formatted.",
-                                           "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(StringResources.ErrorMsgLoadConfigFailed,
+                                           StringResources.ErrorConfigTitle, MessageBoxButton.OK, MessageBoxImage.Error);
                 _appSettings = new AppSettings();
             }
             _appSettings.Ocr ??= new OcrSettings();
@@ -145,20 +148,20 @@ public partial class App : System.Windows.Application
         }
         catch (FileNotFoundException)
         {
-            System.Windows.MessageBox.Show("appsettings.json not found. Using default settings.",
-                                       "Configuration Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            System.Windows.MessageBox.Show(StringResources.WarningAppsettingsNotFound,
+                                       StringResources.WarningConfigTitle, MessageBoxButton.OK, MessageBoxImage.Warning);
             _appSettings = new AppSettings { Ocr = new OcrSettings(), Hotkey = new HotkeySettings { Key = "F1", Modifiers = "Control, Alt" }, ResultWindow = new ResultWindowSettings() };
         }
         catch (System.Text.Json.JsonException ex)
         {
-            System.Windows.MessageBox.Show($"Error reading appsettings.json: {ex.Message}. Using default settings.",
-                                       "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(string.Format(StringResources.ErrorReadingAppsettings, ex.Message),
+                                       StringResources.ErrorConfigTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             _appSettings = new AppSettings { Ocr = new OcrSettings(), Hotkey = new HotkeySettings { Key = "F1", Modifiers = "Control, Alt" }, ResultWindow = new ResultWindowSettings() };
         }
         catch (Exception ex)
         {
-            System.Windows.MessageBox.Show($"An unexpected error occurred while loading configuration: {ex.Message}. Using default settings.",
-                                       "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            System.Windows.MessageBox.Show(string.Format(StringResources.ErrorUnexpectedLoadConfig, ex.Message),
+                                       StringResources.ErrorConfigTitle, MessageBoxButton.OK, MessageBoxImage.Error);
             _appSettings = new AppSettings { Ocr = new OcrSettings(), Hotkey = new HotkeySettings { Key = "F1", Modifiers = "Control, Alt" }, ResultWindow = new ResultWindowSettings() };
         }
     }
@@ -167,13 +170,13 @@ public partial class App : System.Windows.Application
     {
         _notifyIcon = new NotifyIcon();
         _notifyIcon.Icon = GetAppIcon();
-        _notifyIcon.Text = "OmniGrab OCR";
+        _notifyIcon.Text = StringResources.AppTitle;
         _notifyIcon.Visible = true;
 
         var contextMenu = new ContextMenuStrip();
-        var settingsMenuItem = new ToolStripMenuItem("Settings");
+        var settingsMenuItem = new ToolStripMenuItem(StringResources.MenuSettings);
         settingsMenuItem.Click += SettingsMenuItem_Click;
-        var exitMenuItem = new ToolStripMenuItem("Exit");
+        var exitMenuItem = new ToolStripMenuItem(StringResources.MenuExit);
         exitMenuItem.Click += ExitMenuItem_Click;
 
         contextMenu.Items.Add(settingsMenuItem);
@@ -292,8 +295,8 @@ public partial class App : System.Windows.Application
 
                         if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(endpointUrl))
                         {
-                            System.Windows.MessageBox.Show("API Key or Endpoint URL is not configured in appsettings.json!",
-                                                       "Configuration Needed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            System.Windows.MessageBox.Show(StringResources.MsgConfigNeeded,
+                                                       StringResources.TitleConfigNeeded, MessageBoxButton.OK, MessageBoxImage.Warning);
                             return;
                         }
 
@@ -310,12 +313,14 @@ public partial class App : System.Windows.Application
                         catch (HttpRequestException httpEx)
                         {
                             Debug.WriteLine($"OCR API Call Failed: {httpEx.Message}");
-                            System.Windows.MessageBox.Show($"Failed to connect to OCR service: {httpEx.Message}", "OCR Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            System.Windows.MessageBox.Show(string.Format(StringResources.ErrorOcrConnectFailed, httpEx.Message), 
+                                            StringResources.TitleOcrError, MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                         catch (Exception ex)
                         {
                             Debug.WriteLine($"OCR Processing Failed: {ex.ToString()}");
-                            System.Windows.MessageBox.Show($"An error occurred during OCR processing: {ex.Message}", "OCR Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            System.Windows.MessageBox.Show(string.Format(StringResources.ErrorOcrProcessing, ex.Message), 
+                                            StringResources.TitleOcrError, MessageBoxButton.OK, MessageBoxImage.Error);
                         }
 
                         if (recognizedText != null)
@@ -332,7 +337,8 @@ public partial class App : System.Windows.Application
                     else
                     {
                         Debug.WriteLine("Screenshot capture failed.");
-                        System.Windows.MessageBox.Show("Failed to capture the screen region.", "Capture Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        System.Windows.MessageBox.Show(StringResources.ErrorCaptureFailed, 
+                                        StringResources.TitleCaptureError, MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else

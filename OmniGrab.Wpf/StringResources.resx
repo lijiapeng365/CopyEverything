@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>OmniGrab OCR</value>
+  </data>
+  <data name="MenuSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="MenuExit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="SettingsWindowTitle" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LabelApiKey" xml:space="preserve">
+    <value>API Key:</value>
+  </data>
+  <data name="LabelEndpointUrl" xml:space="preserve">
+    <value>Endpoint URL:</value>
+  </data>
+  <data name="LabelModelName" xml:space="preserve">
+    <value>Model Name:</value>
+  </data>
+  <data name="LabelHotkey" xml:space="preserve">
+    <value>Key:</value>
+  </data>
+  <data name="LabelModifiers" xml:space="preserve">
+    <value>Modifiers:</value>
+  </data>
+  <data name="TooltipModifiers" xml:space="preserve">
+    <value>Comma-separated (e.g., Control, Alt, Shift, Win)</value>
+  </data>
+  <data name="MsgSettingsSaved" xml:space="preserve">
+    <value>Settings saved successfully. Restart the application for changes to take full effect.</value>
+  </data>
+  <data name="MsgSettingsSavedTitle" xml:space="preserve">
+    <value>Settings Saved</value>
+  </data>
+  <data name="ErrorConfigTitle" xml:space="preserve">
+    <value>Configuration Error</value>
+  </data>
+  <data name="ErrorMsgLoadConfigFailed" xml:space="preserve">
+    <value>Failed to load settings from appsettings.json. Please ensure the file exists and is correctly formatted.</value>
+  </data>
+  <data name="WarningAppsettingsNotFound" xml:space="preserve">
+    <value>appsettings.json not found. Using default settings.</value>
+  </data>
+  <data name="WarningConfigTitle" xml:space="preserve">
+    <value>Configuration Warning</value>
+  </data>
+  <data name="ErrorReadingAppsettings" xml:space="preserve">
+    <value>Error reading appsettings.json: {0}. Using default settings.</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorUnexpectedLoadConfig" xml:space="preserve">
+    <value>An unexpected error occurred while loading configuration: {0}. Using default settings.</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorHotkeyRegisterFailed" xml:space="preserve">
+    <value>Failed to register hotkey: {0}
+Please check if another application is using the same hotkey or change it in settings.</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorHotkeyTitle" xml:space="preserve">
+    <value>Hotkey Error</value>
+  </data>
+  <data name="ErrorInitHotkeyManagerFailed" xml:space="preserve">
+    <value>Failed to initialize hotkey manager: {0}</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorInitTitle" xml:space="preserve">
+    <value>Initialization Error</value>
+  </data>
+  <data name="ErrorUnexpectedHotkeySetup" xml:space="preserve">
+    <value>An unexpected error occurred during hotkey setup: {0}</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorCriticalInitGeneric" xml:space="preserve">
+    <value>Failed to initialize: Required component is missing.</value>
+  </data>
+  <data name="InfoHotKeyRegistered" xml:space="preserve">
+    <value>Hotkey registered: {0} + {1}</value>
+    <comment>{0} is modifier, {1} is key</comment>
+  </data>
+  <data name="WarningHotkeyNotRegistered" xml:space="preserve">
+    <value>Warning: Both Hotkey Key and Modifiers are effectively None. Hotkey not registered.</value>
+  </data>
+  <data name="WarningParseKeyFailed" xml:space="preserve">
+    <value>Warning: Could not parse Hotkey Key '{0}'. Using default {1}.</value>
+    <comment>{0} is parsed key, {1} is default key</comment>
+  </data>
+  <data name="WarningParseModifiersFailed" xml:space="preserve">
+    <value>Warning: Could not parse Hotkey Modifiers '{0}'. Using default {1}.</value>
+    <comment>{0} is parsed modifiers, {1} is default modifiers</comment>
+  </data>
+  <data name="WarningModifiersNotSpecified" xml:space="preserve">
+    <value>Warning: Hotkey Modifiers not specified. Using default {0}.</value>
+    <comment>{0} is default modifiers</comment>
+  </data>
+  <data name="MsgConfigNeeded" xml:space="preserve">
+    <value>API Key or Endpoint URL is not configured in appsettings.json!</value>
+  </data>
+  <data name="TitleConfigNeeded" xml:space="preserve">
+    <value>Configuration Needed</value>
+  </data>
+  <data name="ErrorOcrConnectFailed" xml:space="preserve">
+    <value>Failed to connect to OCR service: {0}</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="TitleOcrError" xml:space="preserve">
+    <value>OCR Error</value>
+  </data>
+  <data name="ErrorOcrProcessing" xml:space="preserve">
+    <value>An error occurred during OCR processing: {0}</value>
+    <comment>{0} is the exception message</comment>
+  </data>
+  <data name="ErrorCaptureFailed" xml:space="preserve">
+    <value>Failed to capture the screen region.</value>
+  </data>
+  <data name="TitleCaptureError" xml:space="preserve">
+    <value>Capture Error</value>
+  </data>
+</root> 

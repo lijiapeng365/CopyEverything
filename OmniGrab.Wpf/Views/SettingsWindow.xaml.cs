@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
+// Assuming StringResources is in the root namespace OmniGrab.Wpf
+// If it's in Properties, you might need: using OmniGrab.Wpf.Properties;
 
 namespace OmniGrab.Wpf.Views
 {
@@ -39,7 +41,18 @@ namespace OmniGrab.Wpf.Views
             }
             catch (System.Text.Json.JsonException ex)
             {
-                System.Windows.MessageBox.Show($"Error loading settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                // Use StringResources for the message and title
+                System.Windows.MessageBox.Show(string.Format(StringResources.ErrorReadingAppsettings, ex.Message), 
+                                               StringResources.ErrorConfigTitle, 
+                                               MessageBoxButton.OK, 
+                                               MessageBoxImage.Error);
+            }
+            catch (Exception ex) // Generic catch for other loading errors
+            {
+                 System.Windows.MessageBox.Show(string.Format(StringResources.ErrorUnexpectedLoadConfig, ex.Message), 
+                                               StringResources.ErrorConfigTitle, 
+                                               MessageBoxButton.OK, 
+                                               MessageBoxImage.Error);
             }
             // Return default settings if file doesn't exist or there's an error
             return new AppSettings 
@@ -85,19 +98,24 @@ namespace OmniGrab.Wpf.Views
                 var json = JsonSerializer.Serialize(rootObjectToSave, options);
                 File.WriteAllText(_appSettingsPath, json);
 
-                System.Windows.MessageBox.Show("Settings saved successfully. Restart the application for changes to take full effect.", "Settings Saved", MessageBoxButton.OK, MessageBoxImage.Information);
-                this.DialogResult = true; // Indicates settings were saved
+                // Use StringResources for the success message and title
+                System.Windows.MessageBox.Show(StringResources.MsgSettingsSaved, 
+                                               StringResources.MsgSettingsSavedTitle, 
+                                               MessageBoxButton.OK, 
+                                               MessageBoxImage.Information);
                 this.Close();
             }
-            catch (Exception ex)
+            catch (Exception ex) // Generic catch for saving errors
             {
-                System.Windows.MessageBox.Show($"Error saving settings: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show(string.Format(StringResources.ErrorUnexpectedLoadConfig, ex.Message), // Reusing a generic config error string for saving
+                                               StringResources.ErrorTitle, 
+                                               MessageBoxButton.OK, 
+                                               MessageBoxImage.Error);
             }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
             this.Close();
         }
     }

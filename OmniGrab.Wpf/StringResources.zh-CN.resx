@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>OmniGrab 截图OCR</value>
+  </data>
+  <data name="MenuSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="MenuExit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="SettingsWindowTitle" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="ButtonSave" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="ButtonCancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="LabelApiKey" xml:space="preserve">
+    <value>API 密钥:</value>
+  </data>
+  <data name="LabelEndpointUrl" xml:space="preserve">
+    <value>接口地址:</value>
+  </data>
+  <data name="LabelModelName" xml:space="preserve">
+    <value>模型名称:</value>
+  </data>
+  <data name="LabelHotkey" xml:space="preserve">
+    <value>快捷键:</value>
+  </data>
+  <data name="LabelModifiers" xml:space="preserve">
+    <value>修饰键:</value>
+  </data>
+  <data name="TooltipModifiers" xml:space="preserve">
+    <value>逗号分隔 (例如 Control, Alt, Shift, Win)</value>
+  </data>
+  <data name="MsgSettingsSaved" xml:space="preserve">
+    <value>设置已成功保存。重启应用程序以使更改完全生效。</value>
+  </data>
+  <data name="MsgSettingsSavedTitle" xml:space="preserve">
+    <value>设置已保存</value>
+  </data>
+  <data name="ErrorConfigTitle" xml:space="preserve">
+    <value>配置错误</value>
+  </data>
+  <data name="ErrorMsgLoadConfigFailed" xml:space="preserve">
+    <value>从 appsettings.json 加载配置失败。请确保文件存在且格式正确。</value>
+  </data>
+  <data name="WarningAppsettingsNotFound" xml:space="preserve">
+    <value>未找到 appsettings.json。将使用默认设置。</value>
+  </data>
+  <data name="WarningConfigTitle" xml:space="preserve">
+    <value>配置警告</value>
+  </data>
+  <data name="ErrorReadingAppsettings" xml:space="preserve">
+    <value>读取 appsettings.json 出错: {0}。将使用默认设置。</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorUnexpectedLoadConfig" xml:space="preserve">
+    <value>加载配置过程中发生意外错误: {0}。将使用默认设置。</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorHotkeyRegisterFailed" xml:space="preserve">
+    <value>注册热键失败: {0}
+请检查是否有其他程序占用了相同的热键，或在设置中更改热键。</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorHotkeyTitle" xml:space="preserve">
+    <value>热键错误</value>
+  </data>
+  <data name="ErrorInitHotkeyManagerFailed" xml:space="preserve">
+    <value>初始化热键管理器失败: {0}</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorInitTitle" xml:space="preserve">
+    <value>初始化错误</value>
+  </data>
+  <data name="ErrorUnexpectedHotkeySetup" xml:space="preserve">
+    <value>热键设置过程中发生意外错误: {0}</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="ErrorCriticalInitGeneric" xml:space="preserve">
+    <value>初始化失败：缺少必要的组件。</value>
+  </data>
+  <data name="InfoHotKeyRegistered" xml:space="preserve">
+    <value>热键已注册: {0} + {1}</value>
+    <comment>{0} 是修饰键, {1} 是按键</comment>
+  </data>
+  <data name="WarningHotkeyNotRegistered" xml:space="preserve">
+    <value>警告：热键按键和修饰键均无效。热键未注册。</value>
+  </data>
+  <data name="WarningParseKeyFailed" xml:space="preserve">
+    <value>警告：无法解析热键按键 '{0}'。将使用默认 {1}。</value>
+    <comment>{0} 是被解析的按键, {1} 是默认按键</comment>
+  </data>
+  <data name="WarningParseModifiersFailed" xml:space="preserve">
+    <value>警告：无法解析热键修饰键 '{0}'。将使用默认 {1}。</value>
+    <comment>{0} 是被解析的修饰键, {1} 是默认修饰键</comment>
+  </data>
+  <data name="WarningModifiersNotSpecified" xml:space="preserve">
+    <value>警告：未指定热键修饰键。将使用默认 {0}。</value>
+    <comment>{0} 是默认修饰键</comment>
+  </data>
+  <data name="MsgConfigNeeded" xml:space="preserve">
+    <value>appsettings.json 中未配置 API 密钥或接口地址！</value>
+  </data>
+  <data name="TitleConfigNeeded" xml:space="preserve">
+    <value>需要配置</value>
+  </data>
+  <data name="ErrorOcrConnectFailed" xml:space="preserve">
+    <value>连接 OCR 服务失败: {0}</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="TitleOcrError" xml:space="preserve">
+    <value>OCR 错误</value>
+  </data>
+  <data name="ErrorOcrProcessing" xml:space="preserve">
+    <value>OCR 处理过程中发生错误: {0}</value>
+    <comment>{0} 是异常信息</comment>
+  </data>
+  <data name="ErrorCaptureFailed" xml:space="preserve">
+    <value>捕获屏幕区域失败。</value>
+  </data>
+  <data name="TitleCaptureError" xml:space="preserve">
+    <value>捕获错误</value>
+  </data>
+</root> 
