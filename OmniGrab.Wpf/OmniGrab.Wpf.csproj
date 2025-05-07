@@ -7,6 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
+    <!-- 如果需要完全禁用隐式项目项，可以取消注释下一行 -->
+    <!-- <EnableDefaultItems>false</EnableDefaultItems> -->
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,5 +23,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <!--ItemGroup>
+    <Page Include="Views\SettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup-->
 
 </Project>

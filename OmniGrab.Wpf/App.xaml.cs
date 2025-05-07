@@ -70,7 +70,7 @@ public partial class App : System.Windows.Application
                                        "Configuration Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
             _appSettings = new AppSettings { Ocr = new OcrSettings(), Hotkey = new HotkeySettings { Key = "F1", Modifiers = "Control, Alt" }, ResultWindow = new ResultWindowSettings() };
         }
-        catch (JsonException ex)
+        catch (System.Text.Json.JsonException ex)
         {
             System.Windows.MessageBox.Show($"Error reading appsettings.json: {ex.Message}. Using default settings.",
                                        "Configuration Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -94,7 +94,7 @@ public partial class App : System.Windows.Application
 
         if (_appSettings == null || _appSettings.Hotkey == null)
         {
-            Debug.WriteLineError("Settings or Hotkey configuration is missing. Cannot initialize.");
+            Debug.WriteLine("ERROR: Settings or Hotkey configuration is missing. Cannot initialize.");
             return;
         }
 
@@ -142,7 +142,7 @@ public partial class App : System.Windows.Application
                 }
                 else
                 {
-                     Debug.WriteLineError("Cannot register hotkey with ModifierKeys.None.");
+                     Debug.WriteLine("ERROR: Cannot register hotkey with ModifierKeys.None.");
                      System.Windows.MessageBox.Show("Invalid hotkey configuration (Modifiers cannot be None). Please check settings.",
                                                 "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
@@ -150,8 +150,7 @@ public partial class App : System.Windows.Application
             }
             catch (Win32Exception ex)
             {
-                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}
-" +
+                System.Windows.MessageBox.Show($"Failed to register hotkey: {ex.Message}\n" +
                                 "Please check if another application is using the same hotkey or change it in settings.",
                                 "Hotkey Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -167,7 +166,7 @@ public partial class App : System.Windows.Application
         }
         else
         {
-             Debug.WriteLineError("Cannot register hotkey because the required window instance is null.");
+             Debug.WriteLine("ERROR: Cannot register hotkey because the required window instance is null.");
              System.Windows.MessageBox.Show("Failed to initialize hotkey manager: Required window component is missing.", "Initialization Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
@@ -207,7 +206,7 @@ public partial class App : System.Windows.Application
              {
                  return new Icon(iconPath);
              }
-            Debug.WriteLineWarning($"Application icon not found at '{iconPath}'. Using default system icon.");
+            Debug.WriteLine($"Warning: Application icon not found at '{iconPath}'. Using default system icon.");
             return SystemIcons.Application;
         }
         catch (Exception ex)

@@ -120,7 +120,7 @@ namespace OmniGrab.Wpf.Services
                             return string.Empty; // Indicate success but no text
                         }
                     }
-                    catch (JsonException jsonEx)
+                    catch (Newtonsoft.Json.JsonException jsonEx)
                     {
                         Console.WriteLine($"Error parsing OCR JSON response: {jsonEx.Message}. Response Body: {responseBody}");
                         return null; // Indicate failure due to parsing error

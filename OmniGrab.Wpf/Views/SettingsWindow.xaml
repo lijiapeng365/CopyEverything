@@ -1,0 +1,53 @@
+<Window x:Class="OmniGrab.Wpf.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="400"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="OCR Settings" FontWeight="Bold" Margin="0,0,0,10" Grid.ColumnSpan="2"/>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="API Key:" VerticalAlignment="Center" Margin="0,0,10,5"/>
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="ApiKeyTextBox" Margin="0,0,0,5"/>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Endpoint URL:" VerticalAlignment="Center" Margin="0,0,10,5"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="EndpointUrlTextBox" Margin="0,0,0,5"/>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Model Name:" VerticalAlignment="Center" Margin="0,0,10,5"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="ModelNameTextBox" Margin="0,0,0,10"/>
+        
+        <Separator Grid.Row="4" Grid.ColumnSpan="2" Margin="0,5,0,10"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Hotkey Settings" FontWeight="Bold" Margin="0,0,0,10" Grid.ColumnSpan="2"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Key:" VerticalAlignment="Center" Margin="0,0,10,5"/>
+        <TextBox Grid.Row="6" Grid.Column="1" x:Name="HotkeyKeyTextBox" Margin="0,0,0,5"/>
+
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="Modifiers:" VerticalAlignment="Center" Margin="0,0,10,5"/>
+        <TextBox Grid.Row="7" Grid.Column="1" x:Name="HotkeyModifiersTextBox" Margin="0,0,0,10" ToolTip="Comma-separated (e.g., Control, Alt, Shift, Win)"/>
+        
+        <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="SaveButton" Content="Save" Width="75" Margin="0,0,10,0" Click="SaveButton_Click"/>
+            <Button x:Name="CancelButton" Content="Cancel" Width="75" Click="CancelButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window> 
